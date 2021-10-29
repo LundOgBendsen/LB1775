@@ -1,2 +1,5 @@
 # LB1775
-Repo for LB1775 Introduction to programming in Go
+Repository for LB1775 Introduction to programming in Go
+
+Contains examples, course demos, lab exercises, lab solutions etc.
+
