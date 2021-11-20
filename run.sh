@@ -5,7 +5,7 @@
 
 cp -pr src tmp/src
 
-echo 'Run go version'
+#echo 'Run go version'
 
 PRJDIR="/go"
 VOLMOUNT=$(pwd)/tmp:${PRJDIR}:rw
