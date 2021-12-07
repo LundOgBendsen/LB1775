@@ -11,7 +11,6 @@ import (
 	"time"
 )
 
-// Structured data with 'json-annotations'
 type Tjeneste struct {
 	TjenesteId string `json:"id"`
 	Navn       string
@@ -21,6 +20,8 @@ type Teknologi struct {
 	Id   string
 	Navn string
 }
+
+var Navn = "mflags"
 
 func getJSON(url string, result interface{}) {
 	client := http.Client{
@@ -78,33 +79,43 @@ func visTeknologier() {
 }
 
 func main() {
-	// Cross compile: GOOS=windows go build -o mctl.exe
 	// https://mastedatabasen.dk/viskort/ContentPages/DataFraDatabasen.aspx
 	// https://mastedatabasen.dk/Master/antenner.json?postnr=6900&tjeneste=2&teknologi=7&maxantal=15
 
+
+  // Create with subcommands with different flags
+  // tjeneste og teknologi viser de tilgængelige ting, med -h for hjælp
+  // antenne tager diverse flag samt et postnummer
+  
+  // Default usage
+  flag.Usage = func() {
+    fmt.Fprintf(flag.CommandLine.Output(), Navn + " <-h|subcmd> \nWhere subcmd=<tjeneste|teknologi|antenne>\n")
+  }
+
+
+	// Command flags can operate in FlagSet
+	tjenesteCmd := flag.NewFlagSet(Navn + " tjeneste", flag.ExitOnError)
+	tjenesteCmd.Usage = func() {
+		fmt.Fprintf(flag.CommandLine.Output(), Navn + " tjeneste - Viser de tilgængelige tjenester\n")
+	}
+
+	teknologiCmd := flag.NewFlagSet("teknologi", flag.ExitOnError)
+  // 	teknologiCmd.Usage = func() {
+  // 		fmt.Fprintf(flag.CommandLine.Output(), Navn + " teknologi - Viser de tilgængelige maste teknologier\n")
+  // 	}
+	
+	
 	listCmd := flag.NewFlagSet("antenne", flag.ExitOnError)
 	listCmd.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), "mctl antenne <postnummer> - Viser de tilgængelige antenner i angivne postnummer \n")
+		fmt.Fprintf(flag.CommandLine.Output(), Navn + " antenne <postnummer> - Viser de tilgængelige antenner i angivne postnummer \n")
 		listCmd.PrintDefaults()
 	}
 	listAntal := listCmd.Int("max", 15, "Max antal resultater")
 	listTjeneste := listCmd.String("t", "", "Begræns til denne tjeneste type")
 	listTeknologi := listCmd.String("T", "", "Begræns til denne masteteknologi")
 
-	tjenesteCmd := flag.NewFlagSet("mctl tjeneste", flag.ExitOnError)
-	tjenesteCmd.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), "mctl tjeneste - Viser de tilgængelige tjenester\n")
-	}
 
-	teknologiCmd := flag.NewFlagSet("teknologi", flag.ExitOnError)
-	teknologiCmd.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), "mctl teknologi - Viser de tilgængelige maste teknologier\n")
-	}
-	
-
-  flag.Usage = func() {
-    fmt.Fprintf(flag.CommandLine.Output(), "mctl <-h|subcmd> \nWhere subcmd=<tjeneste|teknologi|antenne>\n")
-  }
+  // Will parse the os.Args() for us
 	flag.Parse()
 	subCmd := flag.Args()
 

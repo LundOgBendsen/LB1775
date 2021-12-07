@@ -3,13 +3,14 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
+	// Include in version latest (since nothing else is specified e.g. @v1.1.0)
+	"github.com/mingrammer/cfmt"
 )
 
 type Tjeneste struct {
@@ -62,21 +63,20 @@ func getTeknologier() []Teknologi {
 
 func visTjenester() {
 	t := getTjenester()
-	fmt.Println("Tjenester")
+	cfmt.Successln("Tjenester")
 	for _, e := range t {
-		fmt.Printf("%v(%v)\n", e.Navn, e.TjenesteId)
+		cfmt.Infof("%v(%v)\n", e.Navn, e.TjenesteId)
 	}
 }
 
 func visTeknologier() {
 	t := getTeknologier()
-	fmt.Println("Teknologier")
+	cfmt.Successln("Teknologier")
 	for _, e := range t {
-		fmt.Printf("%v(%v)\n", e.Navn, e.Id)
+		cfmt.Infof("%v(%v)\n", e.Navn, e.Id)
 	}
 }
 
-// -- ListRequest
 
 type ListRequest struct {
   antal int
@@ -86,12 +86,10 @@ type ListRequest struct {
 }
 
 
-// Adding a (receiver object) makes it an object method rather than a function
 func (request ListRequest) postnummerURI() string {
   return "?postnr="+request.postnummer
 }
 
-// named return
 func (request ListRequest) tjenesteURI() (id string) {
   if request.tjeneste != "" {
     t:= getTjenester()
@@ -104,7 +102,6 @@ func (request ListRequest) tjenesteURI() (id string) {
       id = "&tjeneste=" + id
     }
   }
-  // automatic return value from the named return variable
   return
 }
 
@@ -131,7 +128,6 @@ func (request ListRequest) toURL() string {
   return "https://mastedatabasen.dk/Master/antenner.json" + request.postnummerURI() + request.tjenesteURI() + request.teknologiURI() + request.antalURI()
 }
 
-// return JSON structs...
 type Antenne struct {
   Vejnavn VejnavnStruct
   Husnr string
@@ -147,13 +143,10 @@ type VejnavnStruct struct {
   Navn string
 }
 
-// Using objects.
 func visMaster(antal int, tjeneste string, teknologi string, postnummer string) {
-  // Create the object
   request := ListRequest { antal:antal, tjeneste:tjeneste, teknologi:teknologi, postnummer:postnummer }
-  // Object method invocation
   url := request.toURL()
-  fmt.Println(url)
+  cfmt.Successln(url)
 
   var antenner []Antenne
   getJSON(url, &antenner)
@@ -164,7 +157,7 @@ func visMaster(antal int, tjeneste string, teknologi string, postnummer string) 
     if freq != "" {
       freq = freq + "MHz"
     }
-    fmt.Printf("%03v: %-30v  %v  %v  %8v  %8v\n", idx, addr, a.Idriftsaettelsesdato, a.TjenesteArt.Navn, a.Teknologi.Navn, freq)
+    cfmt.Infof("%03v: %-30v  %v  %v  %8v  %8v\n", idx, addr, a.Idriftsaettelsesdato, a.TjenesteArt.Navn, a.Teknologi.Navn, freq)
   }
 }
 
@@ -173,7 +166,7 @@ func main() {
 
 	listCmd := flag.NewFlagSet("antenne", flag.ExitOnError)
 	listCmd.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), "mctl antenne <postnummer> - Viser de tilgængelige antenner i angivne postnummer \n")
+		cfmt.Fwarningf(flag.CommandLine.Output(), "mctl antenne <postnummer> - Viser de tilgængelige antenner i angivne postnummer \n")
 		listCmd.PrintDefaults()
 	}
 	listAntal := listCmd.Int("max", 15, "Max antal resultater")
@@ -182,16 +175,16 @@ func main() {
 
 	tjenesteCmd := flag.NewFlagSet("mctl tjeneste", flag.ExitOnError)
 	tjenesteCmd.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), "mctl tjeneste - Viser de tilgængelige tjenester\n")
+		cfmt.Fwarningf(flag.CommandLine.Output(), "mctl tjeneste - Viser de tilgængelige tjenester\n")
 	}
 
 	teknologiCmd := flag.NewFlagSet("teknologi", flag.ExitOnError)
 	teknologiCmd.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), "mctl teknologi - Viser de tilgængelige maste teknologier\n")
+		cfmt.Fwarningf(flag.CommandLine.Output(), "mctl teknologi - Viser de tilgængelige maste teknologier\n")
 	}
 
 	if len(os.Args) < 2 {
-		fmt.Println("Angiv underkommando (tjeneste, teknologi, antenne)")
+		cfmt.Errorln("Angiv underkommando (tjeneste, teknologi, antenne)")
 		os.Exit(1)
 	}
 
@@ -207,13 +200,13 @@ func main() {
 	case "antenne":
 		listCmd.Parse(os.Args[2:])
 		if len(listCmd.Args()) < 1 {
-			fmt.Println("Angiv postnummer (eller -h)")
+			cfmt.Warningln("Angiv postnummer (eller -h)")
 			os.Exit(1)
 		}
 		visMaster(*listAntal, *listTjeneste, *listTeknologi, listCmd.Arg(0))
 
 	default:
-		fmt.Println("Forventede <tjeneste|teknologi|antenne>")
+		cfmt.Warningln("Forventede <tjeneste|teknologi|antenne>")
 		os.Exit(1)
 	}
 
