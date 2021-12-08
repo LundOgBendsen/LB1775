@@ -63,6 +63,34 @@ func fanIn(input1, input2 <-chan string) <-chan string {
 }
 
 
+// Fan-in of multiple channels using select
+func fanInSelect(input1, input2 <-chan string) <-chan string {
+  c:= make(chan string)
+  go func() {
+    for {
+      select {
+        case s:= <- input1: c <-s
+        case s:= <- input2: c <-s
+      }
+    }
+  }()
+  return c
+}
+
+// Either receive or timeout
+func receiveOrTimeout() {
+  c:=generator("Joe")
+  for {
+    select {
+      case s:= <- c: fmt.Println(s)
+      case <- time.After(1 * time.Second):
+        fmt.Println("You're too slow")
+        return
+    }
+  }
+}
+
+
 // Push advanced data into channel with return channel
 type Message struct {
   str string
