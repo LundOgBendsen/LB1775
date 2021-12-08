@@ -1,7 +1,6 @@
 package main
 
 
-// Import vs Include
 import (
 	"encoding/json"
 	"fmt"
@@ -9,24 +8,20 @@ import (
 	"log"
 	"net/http"
 	"time"
-	// Unused imports are compile errors
-	// "flag"
 )
 
 
+var Navn = "mctl"
+
 // Basic type definition
 type IdType string
-
-// Uppercase for public, lowercase for private
-// Also showing inferred types
-var Navn = "mctl"
 
 
 
 // Structured data
 type Tjeneste struct {
-  // struct tags for reflection
-	TjenesteId IdType `json: "name", xml: "navn"`
+  // struct tags for reflection (annotations)
+	TjenesteId IdType `json:"id", xml:"id"`
 	Navn       string
 }
 
@@ -46,9 +41,6 @@ func getJSON(url string, result interface{})  {
 	}
 
   // multiple returns return a,b,c,d,e,f,g
-  // Anonymous variables
-  // reg, _ := http.NewRequest()
-
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		log.Fatal(err)
@@ -91,14 +83,13 @@ func getTeknologier() []Teknologi {
 }
 
 func main() {
-	// Cross compile: GOOS=windows go build -o data.exe
 	// https://mastedatabasen.dk/viskort/ContentPages/DataFraDatabasen.aspx
 	// https://mastedatabasen.dk/Master/antenner/tjenester.json
 	// https://mastedatabasen.dk/Master/antenner/teknologier.json
-	// https://mastedatabasen.dk/Master/antenner.json?postnr=6900&tjeneste=2&teknologi=7&maxantal=15
 	fmt.Println("Tjenester")
 	
 	// Range operator gives an interable (idx,e)
+	// Anonymous variables (otherwise compile error)
 	for _, e := range getTjenester() {
 		fmt.Printf("%v : %v\n", e.TjenesteId, e.Navn)
 	}

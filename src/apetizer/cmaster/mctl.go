@@ -11,6 +11,11 @@ import (
 	"time"
 	// Include in version latest (since nothing else is specified e.g. @v1.1.0)
 	"github.com/mingrammer/cfmt"
+	// cfmt has explicit colors for semantic meaning, having methods such as
+	// cfmt.Successln
+	// cfmt.Infoln
+	// cfmt.Warningln
+	// cfmt.Errorln
 )
 
 type Tjeneste struct {

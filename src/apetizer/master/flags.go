@@ -83,7 +83,7 @@ func main() {
 	// https://mastedatabasen.dk/Master/antenner.json?postnr=6900&tjeneste=2&teknologi=7&maxantal=15
 
 
-  // Create with subcommands with different flags
+  // Execute with subcommands having  different flags
   // tjeneste og teknologi viser de tilgængelige ting, med -h for hjælp
   // antenne tager diverse flag samt et postnummer
   
