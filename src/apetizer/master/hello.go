@@ -10,10 +10,10 @@ import (
 
 
 // Uppercase for public, lowercase for private
-var Navn string = "mctl"
+var Navn string = "audience"
 
 // Inferred type
-//var Navn = "mctl"
+//var Navn = "audience"
 
 
 func greeting(name string) string {

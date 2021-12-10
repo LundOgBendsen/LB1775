@@ -1,4 +1,4 @@
-module dk.logb.golang.cmaster
+module mctl
 
 go 1.17
 

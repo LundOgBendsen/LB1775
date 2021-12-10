@@ -95,6 +95,7 @@ func main() {
 	}
 
   fmt.Println("Teknologier")
+  // Only for loops, no while or do-while
 	for _, e := range getTeknologier() {
 		fmt.Printf("%v : %v\n", e.Id, e.Navn)
 	}

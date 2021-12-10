@@ -128,7 +128,7 @@ func main() {
 	case "tjeneste":
 		tjenesteCmd.Parse(subCmd[1:])
 		visTjenester()
-
+    // No breaks
 	case "teknologi":
 		teknologiCmd.Parse(subCmd[1:])
 		visTeknologier()

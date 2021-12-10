@@ -77,7 +77,7 @@ func visTeknologier() {
 }
 
 // -- ListRequest
-
+// Public type with private fields
 type ListRequest struct {
   antal int
   tjeneste string
@@ -147,10 +147,15 @@ type VejnavnStruct struct {
   Navn string
 }
 
+// Constructor (which can access the private fields)
+func NewListRequest(antal int, tjeneste string, teknologi string, postnummer string) ListRequest {
+  return ListRequest{ antal:antal, tjeneste:tjeneste, teknologi:teknologi, postnummer:postnummer }
+}
+
 // Using objects.
 func visMaster(antal int, tjeneste string, teknologi string, postnummer string) {
   // Create the object
-  request := ListRequest { antal:antal, tjeneste:tjeneste, teknologi:teknologi, postnummer:postnummer }
+  request := NewListRequest(antal, tjeneste, teknologi, postnummer)
   // Object method invocation
   url := request.toURL()
   fmt.Println(url)
