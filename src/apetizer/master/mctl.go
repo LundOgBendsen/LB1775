@@ -127,7 +127,7 @@ func (request ListRequest) antalURI() string {
   return "&maxantal=" + strconv.Itoa(request.antal)
 }
 
-func (request ListRequest) toURL() string {
+func (request ListRequest) ToURL() string {
   return "https://mastedatabasen.dk/Master/antenner.json" + request.postnummerURI() + request.tjenesteURI() + request.teknologiURI() + request.antalURI()
 }
 
@@ -157,7 +157,7 @@ func visMaster(antal int, tjeneste string, teknologi string, postnummer string) 
   // Create the object
   request := NewListRequest(antal, tjeneste, teknologi, postnummer)
   // Object method invocation
-  url := request.toURL()
+  url := request.ToURL()
   fmt.Println(url)
 
   var antenner []Antenne
