@@ -1,3 +1,4 @@
+// Everything in packages
 package main
 
 
@@ -20,7 +21,8 @@ func greeting(name string) string {
   return "Hello, " + name
 }
 
+// Starting point. Function main in package main
 func main() {
-	// Cross compile: GOOS=windows go build -o data.exe
+	// Cross compile: GOOS=windows go build -o hello.exe
 	fmt.Println(greeting(Navn))
 }
